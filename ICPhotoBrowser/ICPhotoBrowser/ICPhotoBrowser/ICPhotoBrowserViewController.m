@@ -8,56 +8,50 @@
 
 #import "ICPhotoBrowserViewController.h"
 #import "ICPhotoBrowserCollectionViewCell.h"
-#import "ICPhotoBrowserImageModel.h"
+#import "ICPhotoBrowserImageModelProtocol.h"
 #import "ICPhotoBrowserIndicatorProtocol.h"
 #import "ICPhotoBrowserIndicatorFectory.h"
 
 @interface ICPhotoBrowserViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
+
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIView<ICPhotoBrowserIndicatorProtocol> *indicator;
-
-@property (nonatomic, strong) NSMutableArray<ICPhotoBrowserImageModel *> *groupImages;
-
 @property (nonatomic, assign) CGPoint transitionImgViewCenter;
-
+@property (nonatomic, strong) LYPictureBrowseInteractiveAnimatedTransition *animatedTransition;
 
 @end
 
 @implementation ICPhotoBrowserViewController
-
 - (void)dealloc {
     
 }
 
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return YES;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    for (NSString *url in self.groupImageURLs) {
-        ICPhotoBrowserImageModel *model = [ICPhotoBrowserImageModel new];
-        model.imageURL = url;
-        [self.groupImages addObject:model];
-    }
-    
+    [self setupSubviews];
+    [self panGestureRecognizer];
+}
+
+- (void)setupSubviews {
     [[self collectionView] reloadData];
     
-    self.indicator = [ICPhotoBrowserIndicatorFectory indicatorWithType:self.indicatorType totalPages:self.groupImages.count currentPage:0];
+    self.indicator = [ICPhotoBrowserIndicatorFectory indicatorWithType:self.indicatorType totalPages:self.groupImageModels.count currentPage:self.animatedTransition.transitionParameter.transitionImgIndex];
     [self.view addSubview:(UIView *)self.indicator];
     
     [self prefersStatusBarHidden];
-
-    //指定对应图片
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
     
-    //添加滑动手势
+    //指定对应图片
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.animatedTransition.transitionParameter.transitionImgIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+}
+
+- (void)panGestureRecognizer {
     UIPanGestureRecognizer *interactiveTransitionRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(interactiveTransitionRecognizerAction:)];
     [self.view addGestureRecognizer:interactiveTransitionRecognizer];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,7 +60,7 @@
 }
 
 
-#pragma mark - Event
+#pragma mark - panGestureRecognizer event
 - (void)interactiveTransitionRecognizerAction:(UIPanGestureRecognizer *)gestureRecognizer
 {
     
@@ -130,8 +124,7 @@
 
 #pragma mark - Private Method
 - (void)setupBaseViewControllerProperty:(NSInteger)cellIndex{
-    
-    ICPhotoBrowserCollectionViewCell *cell = (ICPhotoBrowserCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    ICPhotoBrowserCollectionViewCell *cell = (ICPhotoBrowserCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.animatedTransition.transitionParameter.transitionImgIndex inSection:0]];
     
     self.animatedTransition.transitionParameter.transitionImage = cell.getImage;
     self.animatedTransition.transitionParameter.transitionImgIndex = cellIndex;
@@ -141,17 +134,83 @@
     self.transitionImgViewCenter = self.imageView.center;
 }
 
+- (void)setTransitionType:(ICPhotoBrowserTransitionType)transitionType {
+    _transitionType = transitionType;
+    [self updateTransitionDelegate];
+}
 
+- (void)setGroupImageModels:(NSMutableArray<ICPhotoBrowserImageModelProtocol> *)groupImageModels {
+    _groupImageModels = groupImageModels;
+    [self updateTransitionDelegate];
+}
+
+- (void)updateTransitionDelegate {
+    if (!_transitionType || !_groupImageModels) {
+        return;
+    }
+    switch (self.transitionType) {
+        case ICPhotoBrowserTransitionTypeNone:
+        {
+            
+        }
+            break;
+            
+        case ICPhotoBrowserTransitionTypeSystemPhoto:
+        {
+            if (self.transitionIndex > self.groupImageModels.count - 1) {
+                return;
+            }
+            
+            id<ICPhotoBrowserImageModelProtocol> transitionModel = self.groupImageModels[self.transitionIndex];
+            
+            NSMutableArray *frameArray = [NSMutableArray array];
+            for (id<ICPhotoBrowserImageModelProtocol> model in self.groupImageModels) {
+                NSValue *value = [NSValue valueWithCGRect:model.photoBrowserImageView.frame];
+                if (value) {
+                    [frameArray addObject:value];
+                }
+            }
+            
+            LYPictureBrowseTransitionParameter *transitionParameter = [[LYPictureBrowseTransitionParameter alloc] init];
+            transitionParameter.transitionImage = transitionModel.photoBrowserImageView.image;
+            transitionParameter.firstVCImgFrames = frameArray;
+            transitionParameter.transitionImgIndex = self.transitionIndex;
+            self.animatedTransition.transitionParameter = transitionParameter;
+            self.transitioningDelegate = self.animatedTransition;
+            
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark - UICollectionViewDataSource
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSInteger index = scrollView.contentOffset.x / self.view.bounds.size.width;
     [self.indicator setIndex:index];
+    [self setupBaseViewControllerProperty:index];
 }
 
-- (NSMutableArray *)groupImages {
-    if (_groupImages == nil) {
-        _groupImages = [NSMutableArray array];
-    }
-    return _groupImages;
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.groupImageModels.count;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    CGSize size = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+    return size;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    ICPhotoBrowserCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([ICPhotoBrowserCollectionViewCell class]) forIndexPath:indexPath];
+    [cell showWithModel:self.groupImageModels[indexPath.row]];
+    __weak typeof(self) weakSelf = self;
+    [cell setSingleTapGestureBlock:^{
+        __strong typeof(weakSelf) sSelf = weakSelf;
+        [sSelf dismissViewControllerAnimated:YES completion:nil];
+    }];
+    return cell;
 }
 
 - (UICollectionView *)collectionView {
@@ -184,21 +243,10 @@
     return _imageView;
 }
 
-#pragma mark - UICollectionViewDataSource
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.groupImages.count;
+- (LYPictureBrowseInteractiveAnimatedTransition *)animatedTransition{
+    if (!_animatedTransition) {
+        _animatedTransition = [[LYPictureBrowseInteractiveAnimatedTransition alloc] init];
+    }
+    return _animatedTransition;
 }
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGSize size = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
-    return size;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    ICPhotoBrowserCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([ICPhotoBrowserCollectionViewCell class]) forIndexPath:indexPath];
-    [cell showWithModel:self.groupImages[indexPath.row]];
-    return cell;
-}
-
 @end

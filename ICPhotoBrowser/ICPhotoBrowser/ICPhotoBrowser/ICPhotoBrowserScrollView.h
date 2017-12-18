@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 
+- (void)setSingleTapGestureBlock:(void (^)(void))singleTapGestureBlock;
 
 @end
 

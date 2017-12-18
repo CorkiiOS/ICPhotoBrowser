@@ -13,13 +13,13 @@
 
 @interface ICPhotoBrowserScrollView()<UIScrollViewDelegate>
 
+@property (nonatomic, copy) void(^singleTapGestureBlock)(void);
 
 @end
 
 @implementation ICPhotoBrowserScrollView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
       
@@ -39,8 +39,21 @@
         _imageView.backgroundColor = [UIColor redColor];
         _imageView.userInteractionEnabled = YES;
         [self addSubview:_imageView];
+        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapClick)];
+        [_imageView addGestureRecognizer:tapGesture];
     }
     return self;
+}
+
+- (void)singleTapClick {
+    if (self.singleTapGestureBlock) {
+        self.singleTapGestureBlock();
+    }
+}
+
+- (void)setSingleTapGestureBlock:(void (^)(void))singleTapGestureBlock {
+    _singleTapGestureBlock = singleTapGestureBlock;
 }
 
 - (void)setImageURL:(NSURL *)imageURL {
@@ -56,17 +69,13 @@
         }
         
         [_imageView sd_setImageWithURL:imageURL placeholderImage:nil completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            [self setLayout];
+            [self imageViewLayout];
         }];
-        
     }
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-}
 
-- (void)setLayout {
+- (void)imageViewLayout {
     UIImage *image = self.imageView.image;
     if (image == nil || image.size.height==0) {
         return;
@@ -88,8 +97,7 @@
     self.contentSize = CGSizeMake(self.imageView.xl_width, MAX(self.imageView.xl_height, XLScreenH));
 }
 
-- (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView
-{
+- (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView {
     CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width)?
     (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
     CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height)?

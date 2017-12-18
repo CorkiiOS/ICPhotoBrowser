@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0415FA311FE756FE00458134 /* ICPhotoImageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0415FA301FE756FE00458134 /* ICPhotoImageModel.m */; };
 		48B417551FE554F900ED9733 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B417541FE554F900ED9733 /* AppDelegate.m */; };
 		48B417581FE554F900ED9733 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B417571FE554F900ED9733 /* ViewController.m */; };
 		48B4175B1FE554F900ED9733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48B417591FE554F900ED9733 /* Main.storyboard */; };
@@ -19,7 +20,6 @@
 		48B4178E1FE5754F00ED9733 /* UIView+XLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B4178D1FE5754F00ED9733 /* UIView+XLExtension.m */; };
 		48B417911FE690F700ED9733 /* ICPhotoBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B417901FE690F700ED9733 /* ICPhotoBrowserViewController.m */; };
 		48B417941FE6918600ED9733 /* ICPhotoBrowserCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B417931FE6918600ED9733 /* ICPhotoBrowserCollectionViewCell.m */; };
-		48B417971FE692F600ED9733 /* ICPhotoBrowserImageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B417961FE692F600ED9733 /* ICPhotoBrowserImageModel.m */; };
 		48B4179A1FE69E5A00ED9733 /* ICPhotoBrowserPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B417991FE69E5A00ED9733 /* ICPhotoBrowserPageControl.m */; };
 		48B4179D1FE6A05400ED9733 /* ICPhotoBrowserPageText.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B4179C1FE6A05400ED9733 /* ICPhotoBrowserPageText.m */; };
 		48B417A01FE6A24000ED9733 /* ICPhotoBrowserIndicatorFectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B4179F1FE6A24000ED9733 /* ICPhotoBrowserIndicatorFectory.m */; };
@@ -49,6 +49,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0415FA2E1FE7548600458134 /* ICPhotoBrowserImageModelProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICPhotoBrowserImageModelProtocol.h; sourceTree = "<group>"; };
+		0415FA2F1FE756FE00458134 /* ICPhotoImageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICPhotoImageModel.h; sourceTree = "<group>"; };
+		0415FA301FE756FE00458134 /* ICPhotoImageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICPhotoImageModel.m; sourceTree = "<group>"; };
 		48B417501FE554F900ED9733 /* ICPhotoBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ICPhotoBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48B417531FE554F900ED9733 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		48B417541FE554F900ED9733 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -74,8 +77,6 @@
 		48B417901FE690F700ED9733 /* ICPhotoBrowserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICPhotoBrowserViewController.m; sourceTree = "<group>"; };
 		48B417921FE6918600ED9733 /* ICPhotoBrowserCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICPhotoBrowserCollectionViewCell.h; sourceTree = "<group>"; };
 		48B417931FE6918600ED9733 /* ICPhotoBrowserCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICPhotoBrowserCollectionViewCell.m; sourceTree = "<group>"; };
-		48B417951FE692F600ED9733 /* ICPhotoBrowserImageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICPhotoBrowserImageModel.h; sourceTree = "<group>"; };
-		48B417961FE692F600ED9733 /* ICPhotoBrowserImageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICPhotoBrowserImageModel.m; sourceTree = "<group>"; };
 		48B417981FE69E5A00ED9733 /* ICPhotoBrowserPageControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICPhotoBrowserPageControl.h; sourceTree = "<group>"; };
 		48B417991FE69E5A00ED9733 /* ICPhotoBrowserPageControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICPhotoBrowserPageControl.m; sourceTree = "<group>"; };
 		48B4179B1FE6A05400ED9733 /* ICPhotoBrowserPageText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICPhotoBrowserPageText.h; sourceTree = "<group>"; };
@@ -163,6 +164,8 @@
 				48B417541FE554F900ED9733 /* AppDelegate.m */,
 				48B417561FE554F900ED9733 /* ViewController.h */,
 				48B417571FE554F900ED9733 /* ViewController.m */,
+				0415FA2F1FE756FE00458134 /* ICPhotoImageModel.h */,
+				0415FA301FE756FE00458134 /* ICPhotoImageModel.m */,
 				48B417B41FE6B7CB00ED9733 /* ICPhotoBrowser */,
 				48B417591FE554F900ED9733 /* Main.storyboard */,
 				48B4175C1FE554F900ED9733 /* Assets.xcassets */,
@@ -226,8 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				48B417B31FE6B77100ED9733 /* ICPhotoBrowser.h */,
-				48B417951FE692F600ED9733 /* ICPhotoBrowserImageModel.h */,
-				48B417961FE692F600ED9733 /* ICPhotoBrowserImageModel.m */,
+				0415FA2E1FE7548600458134 /* ICPhotoBrowserImageModelProtocol.h */,
 				48B4178F1FE690F700ED9733 /* ICPhotoBrowserViewController.h */,
 				48B417901FE690F700ED9733 /* ICPhotoBrowserViewController.m */,
 				48B417921FE6918600ED9733 /* ICPhotoBrowserCollectionViewCell.h */,
@@ -454,8 +456,8 @@
 				48B417631FE554F900ED9733 /* main.m in Sources */,
 				48B417A01FE6A24000ED9733 /* ICPhotoBrowserIndicatorFectory.m in Sources */,
 				48B4178E1FE5754F00ED9733 /* UIView+XLExtension.m in Sources */,
+				0415FA311FE756FE00458134 /* ICPhotoImageModel.m in Sources */,
 				48B4179A1FE69E5A00ED9733 /* ICPhotoBrowserPageControl.m in Sources */,
-				48B417971FE692F600ED9733 /* ICPhotoBrowserImageModel.m in Sources */,
 				48B417911FE690F700ED9733 /* ICPhotoBrowserViewController.m in Sources */,
 				48B4179D1FE6A05400ED9733 /* ICPhotoBrowserPageText.m in Sources */,
 				48B417AE1FE6A95100ED9733 /* LYPictureBrowsePercentDrivenInteractive.m in Sources */,

@@ -33,6 +33,7 @@
     
     return nil;//push时不加手势交互
 }
+
 - (nullable id <UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning>)animator{
     if (self.transitionParameter.gestureRecognizer)
         return self.percentIntractive;
@@ -55,6 +56,7 @@
     }
     return _customPop;
 }
+
 - (LYPictureBrowsePercentDrivenInteractive *)percentIntractive{
     if (!_percentIntractive) {
         _percentIntractive = [[LYPictureBrowsePercentDrivenInteractive alloc] initWithTransitionParameter:self.transitionParameter];

@@ -9,13 +9,20 @@
 #import <UIKit/UIKit.h>
 
 @class ICPhotoBrowserImageModel;
+@protocol ICPhotoBrowserImageModelProtocol;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface ICPhotoBrowserCollectionViewCell : UICollectionViewCell
 
-- (void)showWithModel:(ICPhotoBrowserImageModel *)model;
+@property (nonatomic, copy) void(^singleTapGestureBlock)(void);
+
+- (void)showWithModel:(id<ICPhotoBrowserImageModelProtocol>)model;
 
 - (UIImage *)getImage;
 
 - (CGRect)getImageFrame;
 
 @end
+
+NS_ASSUME_NONNULL_END

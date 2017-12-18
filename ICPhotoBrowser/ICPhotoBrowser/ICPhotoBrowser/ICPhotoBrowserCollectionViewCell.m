@@ -8,11 +8,11 @@
 
 #import "ICPhotoBrowserCollectionViewCell.h"
 #import "ICPhotoBrowserScrollView.h"
-#import "ICPhotoBrowserImageModel.h"
+#import "ICPhotoBrowserImageModelProtocol.h"
 @interface ICPhotoBrowserCollectionViewCell()
 
 @property (nonatomic, strong) ICPhotoBrowserScrollView *imageContentView;
-@property (nonatomic, strong) ICPhotoBrowserImageModel *model;
+@property (nonatomic, strong) id<ICPhotoBrowserImageModelProtocol> model;
 
 @end
 
@@ -23,7 +23,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        [self imageContentView];
+        __weak typeof(self) weakSelf = self;
+        [[self imageContentView] setSingleTapGestureBlock:^{
+            __strong typeof(weakSelf) sSelf = weakSelf;
+            if (sSelf.singleTapGestureBlock) {
+                sSelf.singleTapGestureBlock();
+            }
+        }];
     }
     return self;
 }
@@ -36,9 +42,8 @@
     return self.imageContentView.imageView.frame;
 }
 
-- (void)showWithModel:(ICPhotoBrowserImageModel *)model {
+- (void)showWithModel:(id<ICPhotoBrowserImageModelProtocol>)model {
     self.model = model;
-    
     self.imageContentView.imageURL = [NSURL URLWithString:model.imageURL];
     
 //    UIImageView *imageView = _pictureImageScrollView.zoomImageView;
@@ -78,13 +83,7 @@
         _imageContentView = [[ICPhotoBrowserScrollView alloc]initWithFrame:self.bounds];
         _imageContentView.backgroundColor = [UIColor blackColor];
         _imageContentView.zoomScale = 1.0f;
-        __weak typeof(self)weakSelf = self;
         [self.contentView addSubview:_imageContentView];
-//        [_pictureImageScrollView setTapBlock:^{
-//            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(imageViewClick:)]) {
-//                [weakSelf.delegate imageViewClick:weakSelf.cellIndex];
-//            }
-//        }];
     }
     return _imageContentView;
 }
